@@ -74,7 +74,6 @@ Produkt auswählen
     # Sleep    1 seconds
     # Click    //*[@id="c24-ver"]/div[1]/div[4]/ul[1]/li[1]/a
 
-
 Versicherte auswählen
     [Documentation]    Wählt die Art des Versicherten aus (z.B. Mich selbst, Mich & Familie).
     [Arguments]    ${versicherte}
@@ -125,7 +124,6 @@ Anzahl Kinder Eingeben
     [Arguments]    ${anzahl}
     Click    ${C24_UI_CHILDREN_COUNT}//input[@value=${anzahl}]/following-sibling::div
 
-
 Kinder Unter 10 Auswählen
     [Documentation]    Wählt aus, ob Kinder unter 10 Jahren vorhanden sind.
     [Arguments]    ${kinder_unter_zehn}
@@ -162,7 +160,6 @@ Tarife Anzeigen
     [Documentation]    Zeigt die verfügbaren Versicherungstarife an.
     Click    ${C24_UI_SUBMIT}
 
-
 Kunde eingeben
     [Documentation]    Gibt die Kundendaten ein, einschließlich Versicherte, Geburtsdatum, Postleitzahl und Stadt.
     [Arguments]    ${versicherte}    ${datum}    ${plz}    ${ort}    ${swt}    ${od}    ${iv}    ${rim}=${EMPTY}    ${knd_count}=${EMPTY}    ${kuz}=${EMPTY} 
@@ -185,7 +182,6 @@ Kunde eingeben
 
     Erstinformationen Bestätigen
     Tarife Anzeigen
-
 
 # Finde den Tarif anhand der Eigenschaften der Subelemente
 Tarif auswählen
@@ -252,20 +248,20 @@ Allgemeine Details Prüfen
     # Navigate to the Allgemein tab
     Click    ${C24_ALLGEMEIN_TAB_ACTIVE} >> ${C24_ALLGEMEIN_TAB_LINK} >> nth=0
     @{result}=    Browser.Get Elements    ${C24_TARIF_DETAIL_TAB} >> ${C24_ALLGEMEIN_TAB_DETILS} >> ${C24_COMPARE_BOX}
-    &{DICTIONARY_1}=    Create Dictionary
+    &{details_ergebnisse}=    Create Dictionary
     FOR    ${element}    IN    @{result}
-        ${element_1}=    Browser.Get Text    ${element} >> ${C24_COMPARE_BOX_TEXT} >> nth=0
-        ${value_visible}=    Run Keyword And Return Status    Browser.Get Text    ${element} >> ${C24_COMPARE_BOX_VALUE} >> nth=0
-        IF    ${value_visible}
-            ${element_2}=    Browser.Get Text    ${element} >> ${C24_COMPARE_BOX_VALUE} >> nth=0
+        ${detail_text}=    Browser.Get Text    ${element} >> ${C24_COMPARE_BOX_TEXT} >> nth=0
+        ${wert_sichtbar}=    Run Keyword And Return Status    Browser.Get Text    ${element} >> ${C24_COMPARE_BOX_VALUE} >> nth=0
+        IF    ${wert_sichtbar}
+            ${detail_wert}=    Browser.Get Text    ${element} >> ${C24_COMPARE_BOX_VALUE} >> nth=0
         ELSE
-            ${element_2}=    Set Variable    ${EMPTY}
+            ${detail_wert}=    Set Variable    ${EMPTY}
         END
-        Set To Dictionary    ${DICTIONARY_1}    ${element_1}    ${element_2}
+        Set To Dictionary    ${details_ergebnisse}    ${detail_text}    ${detail_wert}
     END
     # Log the created dictionary
-    Log    ${DICTIONARY_1}
-    RETURN    ${DICTIONARY_1}
+    Log    ${details_ergebnisse}
+    RETURN    ${details_ergebnisse}
 
 Details prüfen
     [Documentation]    Prüft die Details des Tarifs anhand der übergebenen Eigenschaft und des Werts.
@@ -274,8 +270,6 @@ Details prüfen
     ${normalized_retrieved_value}=    Replace String    ${retrieved_value}    \xa0    ${SPACE}
     ${normalized_wert}=    Replace String    ${wert}    \xa0    ${SPACE}
     Should Be Equal As Strings    ${normalized_retrieved_value}    ${normalized_wert}
-
-
 
 Vergleicher starten
     [Documentation]    Startet den Versicherungsvergleich im Browser.
