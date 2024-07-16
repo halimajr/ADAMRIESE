@@ -1,6 +1,7 @@
 *** Settings ***
 Library    Browser
 Library    String
+Library    Collections
 
 *** Variables ***
 ${headless}                  ${False}
@@ -36,6 +37,13 @@ ${C24_UI_SUBMIT}               //button[@value="Tarife anzeigen"]
 ${AR_PROVIDE_DIV}              //*[@id="content_result"]
 ${C24_RESULTS_SORT}            //*[@id="sortbutton_provider"]/label
 ${C24_RESULT_BOX}              //*[@id="content_result"]/div[@class="result_box"]
+${C24_TARIF_BOX_RESULTS}       //div[@class="result_box_tab details_button compare_button"]
+${C24_TARIF_DETAIL_TAB}        //div[@class="content_result"]//div[@class="tariff_details hidden"]
+${C24_ALLGEMEIN_TAB}           //ul//li[2]
+${C24_ALLGEMEIN_TAB_DETILS}    //div[@data-inlinedetail-tab-id=2]
+${C24_COMPARE_BOX}             //div[@class="compare__feature"]//div[@class="compare__box"]
+${C24_COMPARE_BOX_TEXT}        //div[@class="compare__tooltip-text"] 
+${C24_COMPARE_BOX_VALUE}       //span[@class="compare__value__currency" or @class="compare__value__text"]
 # ${C24_}
 
 
@@ -44,6 +52,7 @@ ${C24_RESULT_BOX}              //*[@id="content_result"]/div[@class="result_box"
 
 # 
 Produkt auswählen
+    [Documentation]    Wählt das angegebene Versicherungsprodukt aus dem Menü aus.
     [Arguments]    ${produkt}
     # To-do: Auswahl Versicherung via Text
     Browser.Hover    ${C24_MAIN_MENU} >> ${C24_NAVBAR} >> ${C24_INSURANCE}
@@ -64,6 +73,7 @@ Produkt auswählen
 
 
 Versicherte auswählen
+    [Documentation]    Wählt die Art des Versicherten aus (z.B. Mich selbst, Mich & Familie).
     [Arguments]    ${versicherte}
     ${versicherte_auswhal}=    Run Keyword And Return Status    Click    //label[contains(., '${versicherte}')]
     IF    not $versicherte_auswhal
@@ -84,47 +94,57 @@ Versicherte auswählen
     # Click    //*[@id="c24-content"]/div[1]/div/div[1]/div/section/div/div[5]/div/div/form/div/div[2]/div[2]/button
 
 Geburtsdatum Eingeben
+    [Documentation]    Gibt das Geburtsdatum des Versicherten ein.
     [Arguments]    ${datum}
     Click    ${C24_UI_BIRTHDATE}
     Type Text    ${C24_UI_BIRTHDATE}    ${datum}
 
 Postleitzahl Eingeben
+    [Documentation]    Gibt die Postleitzahl des Versicherten ein.
     [Arguments]    ${plz}
     Click    ${C24_UI_ZIPCODE}
     Type Text    ${C24_UI_ZIPCODE}    ${plz}
 
 Stadt Auswählen
+    [Documentation]    Wählt die Stadt des Versicherten aus einer Liste aus.
     [Arguments]    ${ort}
     Select Options By    ${C24_UI_CITY}    value    ${ort}
     Sleep    1 seconds
 
 Postleitzahl Und Stadt Eingeben
+    [Documentation]    Gibt die Postleitzahl und die Stadt des Versicherten ein.
     [Arguments]    ${plz}    ${ort}
     Postleitzahl Eingeben    ${plz}
     Stadt Auswählen    ${ort}
 
 Anzahl Kinder Eingeben
+    [Documentation]    Gibt die Anzahl der Kinder des Versicherten ein.
     [Arguments]    ${anzahl}
     Click    ${C24_UI_CHILDREN_COUNT}//input[@value=${anzahl}]/following-sibling::div
 
 
 Kinder Unter 10 Auswählen
+    [Documentation]    Wählt aus, ob Kinder unter 10 Jahren vorhanden sind.
     [Arguments]    ${kinder_unter_zehn}
     Click    ${C24_UI_CHILDREN_UNDER7OR10}//input[@value="${YES_NO}[${kinder_unter_zehn}]"]/following-sibling::div
 
 Empfehlung Stiftung Warentest Beachten
+    [Documentation]    Berücksichtigt die Empfehlung der Stiftung Warentest.
     [Arguments]    ${swt}
     Click    ${C24_UI_PROTECTION_LEVEL}//input[@value="${PROTECTION_LEVEL}[${swt}]"]/following-sibling::div
 
 Öffentlicher Dienst Beschäftigt
+    [Documentation]    Wählt aus, ob der Versicherte im öffentlichen Dienst beschäftigt ist.
     [Arguments]    ${od}
     Click    ${C24_UI_PUBLIC_SERVICE}//input[@value="${YES_NO}[${od}]"]/following-sibling::div
 
 Individuelle Versicherungsleistungen Auswählen
+    [Documentation]    Wählt individuelle Versicherungsleistungen aus.
     [Arguments]    ${iv}
     Click    ${C24_UI_TARGET_AUDIENCE}//input[@value="${YES_NO}[${iv}]"]/following-sibling::div
 
 Risiken Im Dienst Versichern
+    [Documentation]    Versichert Risiken im Dienst, speziell für den Bundesgrenzschutz.
     [Arguments]    ${dhw_wanted}    ${behruf}=Bundesgrenzschutz (ohne techn. Tätigkeit)
     Click    ${C24_UI_DHV_WANTED}//input[@value="${YES_NO}[${dhw_wanted}]"]/following-sibling::div
     IF    "${dhw_wanted}" == "ja"
@@ -132,13 +152,16 @@ Risiken Im Dienst Versichern
     END
     
 Erstinformationen Bestätigen
+    [Documentation]    Bestätigt die Erstinformationen.
     Click    ${C24_BAESTATIGEN}/following-sibling::label
 
 Tarife Anzeigen    
+    [Documentation]    Zeigt die verfügbaren Versicherungstarife an.
     Click    ${C24_UI_SUBMIT}
 
 
 Kunde eingeben
+    [Documentation]    Gibt die Kundendaten ein, einschließlich Versicherte, Geburtsdatum, Postleitzahl und Stadt.
     [Arguments]    ${versicherte}    ${datum}    ${plz}    ${ort}    ${swt}    ${od}    ${iv}    ${rim}=${EMPTY}    ${knd_count}=${EMPTY}    ${kuz}=${EMPTY} 
     Versicherte auswählen    ${versicherte}
     Geburtsdatum Eingeben    ${datum}
@@ -163,16 +186,14 @@ Kunde eingeben
 
 # Finde den Tarif anhand der Eigenschaften der Subelemente
 Tarif auswählen
-    [Arguments]    ${tarif}    ${provider_name}
+    [Documentation]    Wählt einen Tarif basierend auf den Eigenschaften der Subelemente aus.
+    [Arguments]    ${tarif}    ${versicherungsgeber}=Adam Riese
     # Sortieren nach Anbieter
     Click    ${C24_RESULTS_SORT}
-
-    Sleep    10m
     # Klicke Adam Riese
     # To-do: by name
-    Click    ${AR_PROVIDE_DIV}//div[@data-providerid=${C24_PROVIDERS}["${provider_name}"]]
-    # Click    //*[@id="content_result"]/div[2]/div/div[1]/div[2]/div/i
-
+    Click    ${AR_PROVIDE_DIV}//div[@data-providerid=${C24_PROVIDERS}[${versicherungsgeber}]]
+    Sleep    2s
     @{result} =    Browser.Get Elements        ${C24_RESULT_BOX}
     #Log    ${result}
     ${found} =    Finde Tarif    ${versicherungsgeber}    ${tarif}    @{result}
@@ -180,16 +201,20 @@ Tarif auswählen
         Fail
     ELSE
         Browser.Scroll To Element    ${found}
-        Sleep    5 seconds
+        Log    Found Tarif ${found}
+        Sleep    5s
     END
     Set Test Variable    ${tarif}    ${found}
-    Sleep    10m
+    Log    ${tarif}
+    Set Suite Variable    ${tarif}
     
 # Tarifübersicht prüfen
 Übersicht prüfen
+    [Documentation]    Prüft die Übersicht der Tarifdetails anhand der angegebenen Eigenschaften und Werte.
     [Arguments]    ${eigenschaft}    ${wert}
     # //*[@id="content_result"]/div[3]/div[2]/div[4]/div[1]/ul[1]
     # Todo: Idetify also other icons
+    Sleep    10m
     ${list} =    Catenate    ${tarif}    >> span[class="c24pv_bullet_text c24pv_bullet_icon-good"]
     #<span class="c24pv_bullet_text c24pv_bullet_icon-good">Deckungssumme: <strong>7,5 Mio. €</strong></span>
     @{result} =    Browser.Get Elements    ${list}
@@ -206,6 +231,7 @@ Tarif auswählen
                 Return From Keyword
             ELSE
                 FAIL    Werte stimmen nicht überein. <$wert> <> <ist_value>!
+                # Log    Werte stimmen nicht überein. <$wert> <> <ist_value>!
             END
         ELSE
             Continue For Loop
@@ -215,25 +241,58 @@ Tarif auswählen
     Run Keyword and Continue on Failure    FAIL    Tarifeigenschaft $eigenschaft nicht gefunden! 
 
 # Tarifdetails prüfen
+
+Allgemeine Details Prüfen
+    [Documentation]    Prüft die allgemeinen Details des Tarifs.
+        # Get the elements and create a dictionary
+    Sleep    3s
+    Click    ${tarif} >> ${C24_TARIF_BOX_RESULTS}
+    Sleep    3s
+    # Navigate to the Allgemein tab
+    Click    ${C24_TARIF_DETAIL_TAB} >> ${C24_ALLGEMEIN_TAB} >> nth=0 >> //a
+    @{result}=    Browser.Get Elements    ${C24_TARIF_DETAIL_TAB} >> ${C24_ALLGEMEIN_TAB_DETILS} >> ${C24_COMPARE_BOX}
+    &{DICTIONARY_1}=    Create Dictionary
+    FOR    ${element}    IN    @{result}
+        ${element_1}=    Browser.Get Text    ${element} >> ${C24_COMPARE_BOX_TEXT} >> nth=0
+        ${value_visible}=    Run Keyword And Return Status    Browser.Get Text    ${element} >> ${C24_COMPARE_BOX_VALUE} >> nth=0
+        IF    ${value_visible}
+            ${element_2}=    Browser.Get Text    ${element} >> ${C24_COMPARE_BOX_VALUE} >> nth=0
+        ELSE
+            ${element_2}=    Set Variable    ${EMPTY}
+        END
+        Set To Dictionary    ${DICTIONARY_1}    ${element_1}    ${element_2}
+    END
+    # Log the created dictionary
+    Log    ${DICTIONARY_1}
+    RETURN    ${DICTIONARY_1}
+
 Details prüfen
-    [Arguments]    ${eigenschaft}    ${wert}
-    # Todo: alles
-    Fail
+    [Documentation]    Prüft die Details des Tarifs anhand der übergebenen Eigenschaft und des Werts.
+    [Arguments]    ${eigenschaft}    ${wert}    &{eigenschaft_werte_dict}
+    ${retrieved_value}=    Get From Dictionary    ${eigenschaft_werte_dict}    ${eigenschaft}    ${NONE}
+    ${normalized_retrieved_value}=    Replace String    ${retrieved_value}    \xa0    ${SPACE}
+    ${normalized_wert}=    Replace String    ${wert}    \xa0    ${SPACE}
+    Should Be Equal As Strings    ${normalized_retrieved_value}    ${normalized_wert}
+
+
 
 Vergleicher starten
-    # Todo: Größes für Demo anpassen
+    [Documentation]    Startet den Versicherungsvergleich im Browser.
+    # To-do: Größes für Demo anpassen
     Browser.New Browser    headless=${headless}
     Browser.New Page    ${url}
     Browser.Set Viewport Size    1920    1080
     Click    body > div.c24-cookie-consent-wrapper > div.c24-cookie-consent-notice > div.c24-cookie-consent-notice-cnt.clearfix > a
 
 Vergleicher beenden
+    [Documentation]    Beendet den Versicherungsvergleich und schließt den Browser.
     Browser.Close Browser
 
 # Finde das Listenelement basierend auf Versicherernamen und Tarifnamen in der Liste der Tarife
+# //div[@class="content_result"]//div[@class="tariff_and_provider"]//img[@class="provider_logo"]
 Finde Tarif
+    [Documentation]    Findet den Tarif basierend auf dem Versicherungs- und Tarifnamen in der Liste der Tarife.
     [Arguments]    ${versicherung}    ${tarif}    @{tarife}
-
     ${found} =    Set Variable    ${False}
     FOR    ${element}    IN    @{tarife}
         ${img} =    Catenate    ${element}    >> img[class="provider_logo"]
