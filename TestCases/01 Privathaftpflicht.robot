@@ -39,8 +39,6 @@ Test Teardown    No Operation
     #Tarifdetails überprüfen
     Check24.Details prüfen    Deckungssumme für Vermögensschäden    7,5 Mio. €    &{Allgemeine_Details}
     #Tarifdetails überprüfen
-    Check24.Details prüfen    Deckungssumme für Vermögensschäden    7,5 Mio. €    &{Allgemeine_Details}
-    #Tarifdetails überprüfen
     Check24.Details prüfen    Generelle Selbstbeteiligung    keine    &{Allgemeine_Details}
     #Tarifdetails überprüfen
     Check24.Details prüfen    Mindestlaufzeit    1 Jahr    &{Allgemeine_Details}
@@ -73,8 +71,6 @@ Test Teardown    No Operation
     ${Allgemeine_Details}=    Check24.Allgemeine Details Prüfen
     #Tarifdetails überprüfen
     Check24.Details prüfen    Deckungssumme für Sach- und Personenschäden    7,5 Mio. €    &{Allgemeine_Details}
-    #Tarifdetails überprüfen
-    Check24.Details prüfen    Deckungssumme für Vermögensschäden    7,5 Mio. €    &{Allgemeine_Details}
     #Tarifdetails überprüfen
     Check24.Details prüfen    Deckungssumme für Vermögensschäden    7,5 Mio. €    &{Allgemeine_Details}
     #Tarifdetails überprüfen

@@ -212,7 +212,7 @@ Tarif auswählen
     [Documentation]    Prüft die Übersicht der Tarifdetails anhand der angegebenen Eigenschaften und Werte.
     [Arguments]    ${eigenschaft}    ${wert}
     # //*[@id="content_result"]/div[3]/div[2]/div[4]/div[1]/ul[1]
-    # Todo: Idetify also other icons
+    # Todo: Idetify also other icons  TO BE DISCUSSED!
     ${list} =    Catenate    ${tarif}    >> ${C24_UBERSICHT_VALUES} 
     #<span class="c24pv_bullet_text c24pv_bullet_icon-good">Deckungssumme: <strong>7,5 Mio. €</strong></span>
     @{result} =    Browser.Get Elements    ${list} 
