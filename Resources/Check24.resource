@@ -280,10 +280,11 @@ Details prüfen
 Vergleicher starten
     [Documentation]    Startet den Versicherungsvergleich im Browser.
     # To-do: Größes für Demo anpassen
-    Browser.New Browser    headless=${headless}
+    Browser.New Browser    headless=${headless}    args=['--window-position=-8,0']
     Browser.New Page    ${url}
     Browser.Set Viewport Size    1920    1080
     Click    body > div.c24-cookie-consent-wrapper > div.c24-cookie-consent-notice > div.c24-cookie-consent-notice-cnt.clearfix > a
+
 
 Vergleicher beenden
     [Documentation]    Beendet den Versicherungsvergleich und schließt den Browser.
