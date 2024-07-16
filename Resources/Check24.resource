@@ -243,7 +243,6 @@ Tarif auswählen
     FAIL    Tarifeigenschaft $eigenschaft nicht gefunden! 
 
 # Tarifdetails prüfen
-
 Allgemeine Details Prüfen
     [Documentation]    Prüft die allgemeinen Details des Tarifs.
         # Get the elements and create a dictionary
