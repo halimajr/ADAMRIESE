@@ -50,10 +50,7 @@ ${C24_UBERSICHT_VALUES}        //..//..//span[contains(@class, 'c24pv_bullet_tex
 # ${C24_}
 
 
-
 *** Keywords ***
-
-# 
 Produkt auswählen
     [Documentation]    Wählt das angegebene Versicherungsprodukt aus dem Menü aus.
     [Arguments]    ${produkt}
@@ -62,17 +59,6 @@ Produkt auswählen
     Browser.Hover    ${C24_INSURANCE_PRODUCTS} >> //span[contains(text(),"${produkt}")]
     Sleep    1 seconds
     Click    ${C24_INSURANCE_PRODUCTS} >> //span[contains(text(),"${produkt}")]
-    #Bernd:
-    # Browser.Hover    //*[@id="c24-header-bottom"]/div/nav/div/div/div[1]/a
-    # Sleep    1 seconds
-    #Click    //*[@id="c24-header-bottom"]/div/nav/div/div/div[1]/a
-
-    # //ul[contains(@class,"c24-subnav-ele-list")]//li//a//span[contains(text(),"Privathaftpflicht")]
-    #Bern:
-    # DONE: Auswahl des Produktes via seines Namens
-    # Browser.Hover    //*[@id="c24-ver"]/div[1]/div[4]/ul[1]/li[1]/a
-    # Sleep    1 seconds
-    # Click    //*[@id="c24-ver"]/div[1]/div[4]/ul[1]/li[1]/a
 
 Versicherte auswählen
     [Documentation]    Wählt die Art des Versicherten aus (z.B. Mich selbst, Mich & Familie).
@@ -87,13 +73,6 @@ Versicherte auswählen
     ELSE
             Click    //label[contains(., '${versicherte}')]
     END
-    #Bernd:
-    # DONE: Auswahl über Parameter implementieren
-    # Mich selbst
-    # Click    //*[@id="c24-content"]/div[1]/div/div[1]/div/section/div/div[5]/div/div/form/div/div[2]/div[1]/div/div[1]/label
-    # Sleep    1 seconds
-    # # jetzt vergleichen
-    # Click    //*[@id="c24-content"]/div[1]/div/div[1]/div/section/div/div[5]/div/div/form/div/div[2]/div[2]/button
 
 Geburtsdatum Eingeben
     [Documentation]    Gibt das Geburtsdatum des Versicherten ein.
@@ -166,20 +145,15 @@ Kunde eingeben
     Versicherte auswählen    ${versicherte}
     Geburtsdatum Eingeben    ${datum}
     Postleitzahl Und Stadt Eingeben    ${plz}    ${ort}
-
     # Conditional for Anzahl Kinder and Kinder Unter 10
     IF    '${versicherte}' == 'Mich & Familie' or '${versicherte}' == 'Mich & Kind(er)'    Anzahl Kinder Eingeben    ${knd_count}
     IF    '${versicherte}' == 'Mich & Familie' or '${versicherte}' == 'Mich & Kind(er)'    Kinder Unter 10 Auswählen    ${kuz}
-
     # DONE: Options
     Empfehlung Stiftung Warentest Beachten    ${swt}
     Öffentlicher Dienst Beschäftigt    ${od}
-
     # Conditional for Risiken Im Dienst Versichern
     IF    '${od}' == 'ja'    Risiken Im Dienst Versichern    ${rim}
-
     Individuelle Versicherungsleistungen Auswählen    ${iv}
-
     Erstinformationen Bestätigen
     Tarife Anzeigen
 
@@ -187,14 +161,10 @@ Kunde eingeben
 Tarif auswählen
     [Documentation]    Wählt einen Tarif basierend auf den Eigenschaften der Subelemente aus.
     [Arguments]    ${tarif}    ${versicherungsgeber}=Adam Riese
-    # Sortieren nach Anbieter
     Click    ${C24_RESULTS_SORT}
-    # Klicke Adam Riese
-    # DONE: by name
     Click    ${AR_PROVIDE_DIV}//div[@data-providerid=${C24_PROVIDERS}[${versicherungsgeber}]]
     Sleep    2s
     @{result} =    Browser.Get Elements        ${C24_RESULT_BOX} >> //div[@class="tariff_and_provider"]
-    #Log    ${result}
     ${found} =    Finde Tarif    ${versicherungsgeber}    ${tarif}    @{result}
     IF    not $found
         Fail
@@ -204,17 +174,14 @@ Tarif auswählen
         Sleep    5s
     END
     Set Test Variable    ${tarif}    ${found}
-    # Log    ${tarif}
-    # Set Suite Variable    ${tarif}
+    Scroll To Element    selector=${tarif}
+    Take Screenshot      EMBED    selector=${tarif}
     
 # Tarifübersicht prüfen
 Übersicht prüfen
     [Documentation]    Prüft die Übersicht der Tarifdetails anhand der angegebenen Eigenschaften und Werte.
     [Arguments]    ${eigenschaft}    ${wert}
-    # //*[@id="content_result"]/div[3]/div[2]/div[4]/div[1]/ul[1]
-    # Todo: Idetify also other icons  TO BE DISCUSSED!
     ${list} =    Catenate    ${tarif}    >> ${C24_UBERSICHT_VALUES} 
-    #<span class="c24pv_bullet_text c24pv_bullet_icon-good">Deckungssumme: <strong>7,5 Mio. €</strong></span>
     @{result} =    Browser.Get Elements    ${list} 
     FOR    ${element}    IN    @{result}
         Log    ${element}
@@ -225,18 +192,18 @@ Tarif auswählen
         IF    ${doesStart}
             ${ist_value} =    Browser.Get Text    ${value}
             IF    $ist_value == $wert
-                Log    Werte stimmen überein. ${eigenschaft} = ${wert} => ${ist_eigenschaft}
-                Return From Keyword
+                Log    Werte stimmen überein. "${eigenschaft}" = "${wert}" => "${ist_eigenschaft}"
             ELSE
-                FAIL    Werte stimmen nicht überein. <$wert> <> <ist_value>!
-                # Log    Werte stimmen nicht überein. <$wert> <> <ist_value>!
+                Run Keyword and Continue on Failure    FAIL     
+                ...    Werte in "${ist_eigenschaft}" stimmen nicht mit dem Erwartungswert überein! Erwartet: "${wert}"
             END
+            Return From Keyword
         ELSE
             Continue For Loop
         END
 
     END
-    FAIL    Tarifeigenschaft $eigenschaft nicht gefunden! 
+    Run Keyword and Continue on Failure    FAIL    Tarifeigenschaft ${eigenschaft} nicht gefunden!
 
 # Tarifdetails prüfen
 Allgemeine Details Lesen
@@ -245,7 +212,6 @@ Allgemeine Details Lesen
     Sleep    3s
     Click    ${tarif} >> //..//..${C24_TARIF_BOX_RESULTS}
     Sleep    3s
-    # Navigate to the Allgemein tab
     Click    ${C24_ALLGEMEIN_TAB_ACTIVE} >> ${C24_ALLGEMEIN_TAB_LINK} >> nth=0
     @{result}=    Browser.Get Elements    ${C24_TARIF_DETAIL_TAB} >> ${C24_ALLGEMEIN_TAB_DETILS} >> ${C24_COMPARE_BOX}
     &{details_ergebnisse}=    Create Dictionary
@@ -259,7 +225,6 @@ Allgemeine Details Lesen
         END
         Set To Dictionary    ${details_ergebnisse}    ${detail_text}    ${detail_wert}
     END
-    # Log the created dictionary
     Log    ${details_ergebnisse}
     Set Test Variable    ${Allgemeine_Details}    ${details_ergebnisse}
     RETURN    ${Allgemeine_Details}
@@ -285,8 +250,6 @@ Vergleicher beenden
     [Documentation]    Beendet den Versicherungsvergleich und schließt den Browser.
     Browser.Close Browser
 
-# Finde das Listenelement basierend auf Versicherernamen und Tarifnamen in der Liste der Tarife
-# //div[@class="content_result"]
 Finde Tarif
     [Documentation]    Findet den Tarif basierend auf dem Versicherungs- und Tarifnamen in der Liste der Tarife.
     [Arguments]    ${versicherung}    ${tarif}    @{tarife}
@@ -294,13 +257,10 @@ Finde Tarif
     FOR    ${element}    IN    @{tarife}
         ${img} =    Catenate    ${element}    >> img[class="provider_logo"]
         ${v_ist} =    Get Attribute    ${img}    alt
-        
-        # Check Versicherung
         IF    $v_ist == $versicherung
             ${div} =    Catenate    ${element}    >> div[class="tariff_name tariff_name-recommendation-rate"]
             ${t_ist} =    Browser.Get Text    ${div}
             Log To Console    ${v_ist} ${t_ist}
-            # Check Tarif
             IF    $t_ist == $tarif
                 ${found} =    Set Variable    ${element}
                 BREAK
@@ -309,6 +269,4 @@ Finde Tarif
             Log To Console    ${v_ist}
         END
     END
-
-    # Return found element or False
     RETURN    ${found}        
