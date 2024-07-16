@@ -4,15 +4,21 @@ logs
 **/interactive_console_output.xml
 **/log.html
 **/report.html
-**/*screenshot*.png
-**/geckodriver*.log
 
+# Ignore all PNG files with 'screenshot' in their name
+**/*screenshot*.png
+
+# Specific directory for screenshots
+browser/screenshot/*.png
+
+# Ignore the playwright log file
+playwright-log.txt
 
 # auto generated docs
 **/docs/**/*.html
 
 # Python cache
 **/__pycache__
-**/**.pyc
+**/*.pyc
 
-**/**.pdf
+**/*.pdf

@@ -30,9 +30,9 @@ Test Teardown    No Operation
 
     Check24.Versicherte auswählen    Mich selbst
     #weitere Persona-Daten eingeben
-    Check24.Kunde eingeben    Mich selbst    24.04.1943    24568    Kaltenkirchen    ja    ja    ja
+    Check24.Kunde eingeben    Mich selbst    24.04.1943    24568    Kaltenkirchen    nein    nein    nein
     #zu überprüfenden Tarif suchen und Web-Element merken
-    Check24.Tarif auswählen    L
+    Check24.Tarif auswählen    L    Adam Riese
     #Tarifübersicht prüfen
     Check24.Übersicht prüfen    Deckungssumme    7,5 Mio. €
     #Tarifübersicht prüfen

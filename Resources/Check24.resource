@@ -9,6 +9,7 @@ ${versicherungsgeber}        Adam Riese
 ${TIMEOUT}                   5s
 &{YES_NO}                    ja=yes    nein=no
 &{PROTECTION_LEVEL}          ja=basic  nein=none
+&{C24_PROVIDERS}             Adam Riese=104
 ${C24_MAIN_MENU}             //div[@class="c24-header-inner"]
 ${C24_NAVBAR}                //div[@id="c24-header-bottom"]
 ${C24_INSURANCE}             //div[@class="c24-nav-ele c24-nav-insurance"]
@@ -32,6 +33,9 @@ ${C24_UI_DHV_WANTED}           //div[@name="dhv_wanted"]
 ${C24_BAESTATIGEN}             //input[@id="checkbox-Input1-first_information_accepted-yes"]
 ${C24_UI_SUBMIT}               //button[@value="Tarife anzeigen"]
 
+${AR_PROVIDE_DIV}              //*[@id="content_result"]
+${C24_RESULTS_SORT}            //*[@id="sortbutton_provider"]/label
+${C24_RESULT_BOX}              //*[@id="content_result"]/div[@class="result_box"]
 # ${C24_}
 
 
@@ -135,7 +139,7 @@ Tarife Anzeigen
 
 
 Kunde eingeben
-    [Arguments]    ${versicherte}    ${datum}    ${plz}    ${ort}    ${swt}    ${od}    ${iv}    ${dhw_wanted}=${EMPTY}    ${knd_count}=${EMPTY}    ${kuz}=${EMPTY} 
+    [Arguments]    ${versicherte}    ${datum}    ${plz}    ${ort}    ${swt}    ${od}    ${iv}    ${rim}=${EMPTY}    ${knd_count}=${EMPTY}    ${kuz}=${EMPTY} 
     Versicherte auswählen    ${versicherte}
     Geburtsdatum Eingeben    ${datum}
     Postleitzahl Und Stadt Eingeben    ${plz}    ${ort}
@@ -149,7 +153,7 @@ Kunde eingeben
     Öffentlicher Dienst Beschäftigt    ${od}
 
     # Conditional for Risiken Im Dienst Versichern
-    IF    '${od}' == 'ja'    Risiken Im Dienst Versichern    ja
+    IF    '${od}' == 'ja'    Risiken Im Dienst Versichern    ${rim}
 
     Individuelle Versicherungsleistungen Auswählen    ${iv}
 
@@ -159,15 +163,17 @@ Kunde eingeben
 
 # Finde den Tarif anhand der Eigenschaften der Subelemente
 Tarif auswählen
-    [Arguments]    ${tarif}
+    [Arguments]    ${tarif}    ${provider_name}
     # Sortieren nach Anbieter
-    Click    //*[@id="sortbutton_provider"]/label
+    Click    ${C24_RESULTS_SORT}
 
+    Sleep    10m
     # Klicke Adam Riese
-    # Todo: by name 
-    Click    //*[@id="content_result"]/div[2]/div/div[1]/div[2]/div/i
+    # To-do: by name
+    Click    ${AR_PROVIDE_DIV}//div[@data-providerid=${C24_PROVIDERS}["${provider_name}"]]
+    # Click    //*[@id="content_result"]/div[2]/div/div[1]/div[2]/div/i
 
-    @{result} =    Browser.Get Elements    //*[@id="content_result"]/div[@class="result_box"]
+    @{result} =    Browser.Get Elements        ${C24_RESULT_BOX}
     #Log    ${result}
     ${found} =    Finde Tarif    ${versicherungsgeber}    ${tarif}    @{result}
     IF    not $found
@@ -177,6 +183,7 @@ Tarif auswählen
         Sleep    5 seconds
     END
     Set Test Variable    ${tarif}    ${found}
+    Sleep    10m
     
 # Tarifübersicht prüfen
 Übersicht prüfen
