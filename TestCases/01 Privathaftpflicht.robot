@@ -63,11 +63,11 @@ Test Teardown    No Operation
     #zu überprüfenden Tarif suchen und Web-Element merken
     Check24.Tarif auswählen    XL
     #Tarifübersicht prüfen
-    Check24.Übersicht prüfen    Deckungssumme    7,5 Mio. €
+    Check24.Übersicht prüfen    Deckungssumme    20 Mio. €
     #Tarifübersicht prüfen
     Check24.Übersicht prüfen    Ausfalldeckung    ja
     #Tarifübersicht prüfen
-    Check24.Übersicht prüfen    Schlüsselverlust Miete    10.000 €
+    Check24.Übersicht prüfen    Schlüsselverlust Miete    200.000 €
     # Allgemeine Details zum Dictionary anpassen
     ${Allgemeine_Details}=    Check24.Allgemeine Details Prüfen
     #Tarifdetails überprüfen

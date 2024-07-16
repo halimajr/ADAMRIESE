@@ -41,9 +41,12 @@ ${C24_TARIF_BOX_RESULTS}       //div[@class="result_box_tab details_button compa
 ${C24_TARIF_DETAIL_TAB}        //div[@class="content_result"]//div[@class="tariff_details hidden"]
 ${C24_ALLGEMEIN_TAB}           //ul//li[2]
 ${C24_ALLGEMEIN_TAB_DETILS}    //div[@data-inlinedetail-tab-id=2]
+${C24_ALLGEMEIN_TAB_ACTIVE}    //div[@class="result_box active"]//div[@class="tariff_details hidden"]
+${C24_ALLGEMEIN_TAB_LINK}      //a[@data-inlinedetail-tab-id=2]
 ${C24_COMPARE_BOX}             //div[@class="compare__feature"]//div[@class="compare__box"]
 ${C24_COMPARE_BOX_TEXT}        //div[@class="compare__tooltip-text"] 
 ${C24_COMPARE_BOX_VALUE}       //span[@class="compare__value__currency" or @class="compare__value__text"]
+${C24_UBERSICHT_VALUES}        //..//..//span[contains(@class, 'c24pv_bullet_text') and contains(@class, 'c24pv_bullet_icon-good')]
 # ${C24_}
 
 
@@ -194,7 +197,7 @@ Tarif auswählen
     # To-do: by name
     Click    ${AR_PROVIDE_DIV}//div[@data-providerid=${C24_PROVIDERS}[${versicherungsgeber}]]
     Sleep    2s
-    @{result} =    Browser.Get Elements        ${C24_RESULT_BOX}
+    @{result} =    Browser.Get Elements        ${C24_RESULT_BOX} >> //div[@class="tariff_and_provider"]
     #Log    ${result}
     ${found} =    Finde Tarif    ${versicherungsgeber}    ${tarif}    @{result}
     IF    not $found
@@ -214,10 +217,9 @@ Tarif auswählen
     [Arguments]    ${eigenschaft}    ${wert}
     # //*[@id="content_result"]/div[3]/div[2]/div[4]/div[1]/ul[1]
     # Todo: Idetify also other icons
-    Sleep    10m
-    ${list} =    Catenate    ${tarif}    >> span[class="c24pv_bullet_text c24pv_bullet_icon-good"]
+    ${list} =    Catenate    ${tarif}    >> ${C24_UBERSICHT_VALUES} 
     #<span class="c24pv_bullet_text c24pv_bullet_icon-good">Deckungssumme: <strong>7,5 Mio. €</strong></span>
-    @{result} =    Browser.Get Elements    ${list}
+    @{result} =    Browser.Get Elements    ${list} 
     FOR    ${element}    IN    @{result}
         Log    ${element}
         ${value} =    Catenate    ${element}    >> strong
@@ -238,7 +240,7 @@ Tarif auswählen
         END
 
     END
-    Run Keyword and Continue on Failure    FAIL    Tarifeigenschaft $eigenschaft nicht gefunden! 
+    FAIL    Tarifeigenschaft $eigenschaft nicht gefunden! 
 
 # Tarifdetails prüfen
 
@@ -246,10 +248,10 @@ Allgemeine Details Prüfen
     [Documentation]    Prüft die allgemeinen Details des Tarifs.
         # Get the elements and create a dictionary
     Sleep    3s
-    Click    ${tarif} >> ${C24_TARIF_BOX_RESULTS}
+    Click    ${tarif} >> //..//..${C24_TARIF_BOX_RESULTS}
     Sleep    3s
     # Navigate to the Allgemein tab
-    Click    ${C24_TARIF_DETAIL_TAB} >> ${C24_ALLGEMEIN_TAB} >> nth=0 >> //a
+    Click    ${C24_ALLGEMEIN_TAB_ACTIVE} >> ${C24_ALLGEMEIN_TAB_LINK} >> nth=0
     @{result}=    Browser.Get Elements    ${C24_TARIF_DETAIL_TAB} >> ${C24_ALLGEMEIN_TAB_DETILS} >> ${C24_COMPARE_BOX}
     &{DICTIONARY_1}=    Create Dictionary
     FOR    ${element}    IN    @{result}
@@ -289,7 +291,7 @@ Vergleicher beenden
     Browser.Close Browser
 
 # Finde das Listenelement basierend auf Versicherernamen und Tarifnamen in der Liste der Tarife
-# //div[@class="content_result"]//div[@class="tariff_and_provider"]//img[@class="provider_logo"]
+# //div[@class="content_result"]
 Finde Tarif
     [Documentation]    Findet den Tarif basierend auf dem Versicherungs- und Tarifnamen in der Liste der Tarife.
     [Arguments]    ${versicherung}    ${tarif}    @{tarife}
