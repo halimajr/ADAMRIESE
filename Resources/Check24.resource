@@ -57,7 +57,7 @@ ${C24_UBERSICHT_VALUES}        //..//..//span[contains(@class, 'c24pv_bullet_tex
 Produkt auswählen
     [Documentation]    Wählt das angegebene Versicherungsprodukt aus dem Menü aus.
     [Arguments]    ${produkt}
-    # To-do: Auswahl Versicherung via Text
+    # DONE: Auswahl Versicherung via Text
     Browser.Hover    ${C24_MAIN_MENU} >> ${C24_NAVBAR} >> ${C24_INSURANCE}
     Browser.Hover    ${C24_INSURANCE_PRODUCTS} >> //span[contains(text(),"${produkt}")]
     Sleep    1 seconds
@@ -69,7 +69,7 @@ Produkt auswählen
 
     # //ul[contains(@class,"c24-subnav-ele-list")]//li//a//span[contains(text(),"Privathaftpflicht")]
     #Bern:
-    # To-do: Auswahl des Produktes via seines Namens
+    # DONE: Auswahl des Produktes via seines Namens
     # Browser.Hover    //*[@id="c24-ver"]/div[1]/div[4]/ul[1]/li[1]/a
     # Sleep    1 seconds
     # Click    //*[@id="c24-ver"]/div[1]/div[4]/ul[1]/li[1]/a
@@ -88,7 +88,7 @@ Versicherte auswählen
             Click    //label[contains(., '${versicherte}')]
     END
     #Bernd:
-    # To-do: Auswahl über Parameter implementieren
+    # DONE: Auswahl über Parameter implementieren
     # Mich selbst
     # Click    //*[@id="c24-content"]/div[1]/div/div[1]/div/section/div/div[5]/div/div/form/div/div[2]/div[1]/div/div[1]/label
     # Sleep    1 seconds
@@ -171,7 +171,7 @@ Kunde eingeben
     IF    '${versicherte}' == 'Mich & Familie' or '${versicherte}' == 'Mich & Kind(er)'    Anzahl Kinder Eingeben    ${knd_count}
     IF    '${versicherte}' == 'Mich & Familie' or '${versicherte}' == 'Mich & Kind(er)'    Kinder Unter 10 Auswählen    ${kuz}
 
-    # To-do: Options
+    # DONE: Options
     Empfehlung Stiftung Warentest Beachten    ${swt}
     Öffentlicher Dienst Beschäftigt    ${od}
 
@@ -190,7 +190,7 @@ Tarif auswählen
     # Sortieren nach Anbieter
     Click    ${C24_RESULTS_SORT}
     # Klicke Adam Riese
-    # To-do: by name
+    # DONE: by name
     Click    ${AR_PROVIDE_DIV}//div[@data-providerid=${C24_PROVIDERS}[${versicherungsgeber}]]
     Sleep    2s
     @{result} =    Browser.Get Elements        ${C24_RESULT_BOX} >> //div[@class="tariff_and_provider"]
@@ -273,7 +273,7 @@ Details prüfen
 
 Vergleicher starten
     [Documentation]    Startet den Versicherungsvergleich im Browser.
-    # To-do: Größes für Demo anpassen
+    # DONE: Größes für Demo anpassen
     Browser.New Browser    headless=${headless}    args=['--window-position=-8,0']
     Browser.New Page    ${url}
     Browser.Set Viewport Size    1920    1080
