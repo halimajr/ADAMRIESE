@@ -9,9 +9,6 @@ Metadata    Created by    redon / edis
 Force Tags    PRIO-3
 Resource    ../Resources/Check24.resource
 
-
-Test Teardown    No Operation
-
 *** Test Cases ***
 1.1.1 Max - L
     [Documentation]    ITBEXP-TC-49106-PC-285796
@@ -33,18 +30,17 @@ Test Teardown    No Operation
     # #Tarifübersicht prüfen
     Check24.Übersicht prüfen    Schlüsselverlust Miete    10.000 €
     # Allgemeine Details zum Dictionary anpassen
-    ${Allgemeine_Details}=    Check24.Allgemeine Details Prüfen
+    Check24.Allgemeine Details Lesen
     # #Tarifdetails überprüfen
-    Check24.Details prüfen    Deckungssumme für Sach- und Personenschäden    7,5 Mio. €    &{Allgemeine_Details}
+    Check24.Details prüfen    Deckungssumme für Sach- und Personenschäden    7,5 Mio. €
     #Tarifdetails überprüfen
-    Check24.Details prüfen    Deckungssumme für Vermögensschäden    7,5 Mio. €    &{Allgemeine_Details}
+    Check24.Details prüfen    Deckungssumme für Vermögensschäden    7,5 Mio. €
     #Tarifdetails überprüfen
-    Check24.Details prüfen    Generelle Selbstbeteiligung    keine    &{Allgemeine_Details}
+    Check24.Details prüfen    Generelle Selbstbeteiligung    keine
     #Tarifdetails überprüfen
-    Check24.Details prüfen    Mindestlaufzeit    1 Jahr    &{Allgemeine_Details}
+    Check24.Details prüfen    Mindestlaufzeit    1 Jahr
     #Tarifdetails überprüfen
-    Check24.Details prüfen    Kündigungsfrist des Tarifs    Bei CHECK24 jederzeit zum nächsten Tag kündbar. Sonst jederzeit mit Wirkung zum Ende Ihrer Vertragslaufzeit.   
-    ...    &{Allgemeine_Details}
+    Check24.Details prüfen    Kündigungsfrist des Tarifs    Bei CHECK24 jederzeit zum nächsten Tag kündbar. Sonst jederzeit mit Wirkung zum Ende Ihrer Vertragslaufzeit.
     #Browser schließen
     [Teardown]    Run Keyword    Check24.Vergleicher beenden
 
@@ -68,17 +64,16 @@ Test Teardown    No Operation
     #Tarifübersicht prüfen
     Check24.Übersicht prüfen    Schlüsselverlust Miete    200.000 €
     # Allgemeine Details zum Dictionary anpassen
-    ${Allgemeine_Details}=    Check24.Allgemeine Details Prüfen
+    Check24.Allgemeine Details Lesen
     #Tarifdetails überprüfen
-    Check24.Details prüfen    Deckungssumme für Sach- und Personenschäden    7,5 Mio. €    &{Allgemeine_Details}
+    Check24.Details prüfen    Deckungssumme für Sach- und Personenschäden    7,5 Mio. €
     #Tarifdetails überprüfen
-    Check24.Details prüfen    Deckungssumme für Vermögensschäden    7,5 Mio. €    &{Allgemeine_Details}
+    Check24.Details prüfen    Deckungssumme für Vermögensschäden    7,5 Mio. €
     #Tarifdetails überprüfen
-    Check24.Details prüfen    Generelle Selbstbeteiligung    keine    &{Allgemeine_Details}
+    Check24.Details prüfen    Generelle Selbstbeteiligung    keine
     #Tarifdetails überprüfen
-    Check24.Details prüfen    Mindestlaufzeit    1 Jahr    &{Allgemeine_Details}
+    Check24.Details prüfen    Mindestlaufzeit    1 Jahr
     #Tarifdetails überprüfen
     Check24.Details prüfen    Kündigungsfrist des Tarifs    Bei CHECK24 jederzeit zum nächsten Tag kündbar. Sonst jederzeit mit Wirkung zum Ende Ihrer Vertragslaufzeit.
-    ...    &{Allgemeine_Details}
     #Browser schließen
     [Teardown]    Run Keyword    Check24.Vergleicher beenden

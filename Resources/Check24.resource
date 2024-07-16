@@ -204,8 +204,8 @@ Tarif auswählen
         Sleep    5s
     END
     Set Test Variable    ${tarif}    ${found}
-    Log    ${tarif}
-    Set Suite Variable    ${tarif}
+    # Log    ${tarif}
+    # Set Suite Variable    ${tarif}
     
 # Tarifübersicht prüfen
 Übersicht prüfen
@@ -239,7 +239,7 @@ Tarif auswählen
     FAIL    Tarifeigenschaft $eigenschaft nicht gefunden! 
 
 # Tarifdetails prüfen
-Allgemeine Details Prüfen
+Allgemeine Details Lesen
     [Documentation]    Prüft die allgemeinen Details des Tarifs.
         # Get the elements and create a dictionary
     Sleep    3s
@@ -261,12 +261,13 @@ Allgemeine Details Prüfen
     END
     # Log the created dictionary
     Log    ${details_ergebnisse}
-    RETURN    ${details_ergebnisse}
+    Set Test Variable    ${Allgemeine_Details}    ${details_ergebnisse}
+    RETURN    ${Allgemeine_Details}
 
 Details prüfen
     [Documentation]    Prüft die Details des Tarifs anhand der übergebenen Eigenschaft und des Werts.
-    [Arguments]    ${eigenschaft}    ${wert}    &{eigenschaft_werte_dict}
-    ${retrieved_value}=    Get From Dictionary    ${eigenschaft_werte_dict}    ${eigenschaft}    ${NONE}
+    [Arguments]    ${eigenschaft}    ${wert}
+    ${retrieved_value}=    Get From Dictionary    ${Allgemeine_Details}    ${eigenschaft}    ${NONE}
     ${normalized_retrieved_value}=    Replace String    ${retrieved_value}    \xa0    ${SPACE}
     ${normalized_wert}=    Replace String    ${wert}    \xa0    ${SPACE}
     Should Be Equal As Strings    ${normalized_retrieved_value}    ${normalized_wert}
