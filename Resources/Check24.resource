@@ -134,28 +134,6 @@ Tarife Anzeigen
     Click    ${C24_UI_SUBMIT}
 
 
-
-# Kunde eingeben
-#     [Arguments]    ${versicherte}    ${datum}    ${plz}    ${ort}    ${swt}    ${od}    ${iv}    ${dhw_wanted}    ${knd_count}    ${kuz}
-#     Versicherte auswählen    ${versicherte} 
-#     Geburtsdatum Eingeben    ${datum}
-#     Postleitzahl Und Stadt Eingeben    ${plz}    ${ort}
-#     Anzahl Kinder Eingeben    ${knd_count}
-#     Kinder Unter 10 Auswählen    ${kuz}
-
-#     # To-do: Options
-#     Empfehlung Stiftung Warentest Beachten    ${swt}
-#     Öffentlicher Dienst Beschäftigt    ${od}
-#     Individuelle Versicherungsleistungen Auswählen    ${iv}
-
-#     # Bestätigung
-#         #//*[@id="page-input1"]/div/div[2]/form/div[7]/div/div[1]/div/div/label
-#     Erstinformationen Bestätigen
-#     Tarife Anzeigen
-#     # Tarife anzeigen
-    
-    
-
 Kunde eingeben
     [Arguments]    ${versicherte}    ${datum}    ${plz}    ${ort}    ${swt}    ${od}    ${iv}    ${dhw_wanted}=${EMPTY}    ${knd_count}=${EMPTY}    ${kuz}=${EMPTY} 
     Versicherte auswählen    ${versicherte}
