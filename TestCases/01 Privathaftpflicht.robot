@@ -9,6 +9,7 @@ Metadata    Created by    redon / edis
 Force Tags    PRIO-3
 Resource    ../Resources/Check24.resource
 
+
 Test Teardown    No Operation
 
 *** Test Cases ***
